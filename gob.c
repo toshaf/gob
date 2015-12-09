@@ -16,5 +16,11 @@ int main(int argc, char** argv) {
         return dumped;
     }
 
+    int traced = gob_trace(path);
+    if (traced < 0) {
+        printf("Had a problem tracing\n");
+        return traced;
+    }
+
     return 0;
 }
