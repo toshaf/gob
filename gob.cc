@@ -1,22 +1,28 @@
-#include <iostream>
-#include "gob.hh"
+#include <string>
+#include "gob_internal.hh"
 
-using namespace std;
+using std::string;
 
-int main(int argc, char** argv) {
-    if (argc < 2) {
-        cout << "Which file do you want to dump?\n";
-        return 1;
-    }
+namespace gob {
 
-    char *const path = argv[1];
+Gob::Gob(string path)
+    : path(path)
+    , symbols(::load_symbols(path))
+    , breakpoints()
+{}
 
-    auto symbols = load_symbols(path);
+void Gob::set_breakpoint(string sym_name) {
+    auto si = symbols.find(sym_name);
+    if (si == symbols.end())
+        throw gob_exception(string("Can't set BP, no symbol called ") + sym_name);
 
-    for (auto i = symbols.begin(); i != symbols.end(); ++i) {
-        auto sym = *i;
-        cout << sym.first << "@" << sym.second.addr << endl;
-    }
-
-    return 0;
+    auto sym = si->second;
+    breakpoints.insert(std::make_pair(sym.addr, sym));
 }
+
+void Gob::run(std::function<void(Symbol)> handler) {
+    ::gob_trace(path, breakpoints, handler);
+}
+
+} // gob
+

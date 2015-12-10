@@ -3,18 +3,20 @@
 #include <string>
 #include <exception>
 #include <vector>
-#include "gob.hh"
+#include "gob_internal.hh"
 
 using std::map;
 using std::string;
 using std::exception;
 using std::vector;
 
-map<string, symbol> load_symbols(char const* path) {
+using namespace gob;
+
+map<string, Symbol> load_symbols(string path) {
     
     bfd_init();
 
-    bfd *abfd = bfd_openr(path, NULL);
+    bfd *abfd = bfd_openr(path.c_str(), NULL);
     auto cleanup = [=](){bfd_close(abfd);};
     defer<decltype(cleanup)> d(cleanup);
 
@@ -29,14 +31,14 @@ map<string, symbol> load_symbols(char const* path) {
     vector<asymbol*> asymtab(symtab_size / sizeof(asymbol*));
     int numsymbols = bfd_canonicalize_symtab(abfd, asymtab.data());
 
-    map<string, symbol> symbols;
+    map<string, Symbol> symbols;
 
     for (int i=0; i<numsymbols; ++i) {
-        symbol sym(
+        Symbol sym(
             bfd_asymbol_name(asymtab[i])
         ,   bfd_asymbol_value(asymtab[i])
         );
-        symbols.insert(std::pair<string, symbol>(sym.name, sym));
+        symbols.insert(std::pair<string, Symbol>(sym.name, sym));
     }
 
     return symbols;
