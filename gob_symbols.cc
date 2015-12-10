@@ -26,7 +26,7 @@ map<string, int> load_symbols(char const* path) {
 
     int symtab_size = bfd_get_symtab_upper_bound(abfd);
 
-    vector<asymbol*> asymtab(symtab_size);
+    vector<asymbol*> asymtab(symtab_size / sizeof(asymbol*));
     int numsymbols = bfd_canonicalize_symtab(abfd, asymtab.data());
 
     map<string, int> symbols;
