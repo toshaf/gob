@@ -15,7 +15,7 @@ int main(int argc, char** argv) {
 
     for (auto i = symbols.begin(); i != symbols.end(); ++i) {
         auto sym = *i;
-        cout << sym.first << "@" << sym.second << endl;
+        cout << sym.first << "@" << sym.second.addr << endl;
     }
 
     return 0;

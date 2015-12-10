@@ -4,7 +4,16 @@
 #include <string>
 #include <exception>
 
-std::map<std::string, int> load_symbols(char const* path);
+struct symbol {
+    symbol(std::string name, int addr)
+        : name(name)
+        , addr(addr)
+    {}
+    std::string name;
+    int addr;
+};
+
+std::map<std::string, symbol> load_symbols(char const* path);
 
 struct gob_exception
     : public std::exception {
