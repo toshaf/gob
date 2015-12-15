@@ -1,7 +1,6 @@
 BINARIES=\
     gob \
-    gobc \
-    tester \
+    bin/tester \
     bin/hi
 
 all: $(BINARIES)
@@ -19,19 +18,8 @@ GOBHEADERS=\
 gob: $(GOBFILES) $(GOBHEADERS)
 	g++ $(GOBFILES) -std=c++11 -o gob -lbfd
 
-GOBCFILES=\
-    gob.c \
-    gob_symbols.c \
-    gob_trace.c
-
-GOBCHEADERS=\
-    gob.h
-
-gobc: $(GOBCFILES) $(GOBCHEADERS)
-	gcc $(GOBCFILES) -std=c99 -o gobc -lbfd
-
-tester: tester.c
-	gcc tester.c -o tester
+bin/tester: tester.c
+	gcc tester.c -o bin/tester
 
 bin/hi: src/hi/main.go
 	./build-go.sh
