@@ -5,7 +5,6 @@
 #include <map>
 #include <string>
 #include <functional>
-#include <stdio.h>
 
 #include "gob_internal.hh"
 
@@ -37,10 +36,8 @@ void gob_trace(string path, map<gob::Address, gob::Symbol> symbols, function<voi
 
     map<int, long int> bps;
     for (auto i = symbols.begin(); i != symbols.end(); ++i) {
-        printf("setting breakpoint for %s at 0x%lx\n", i->second.name.c_str(), i->first);
         // store the existing byte
         auto value = ptrace(PTRACE_PEEKTEXT, pid, i->first, 0);
-        printf("overwriting ins 0x%lx\n", value);
         bps[i->first] = value;
 
         // and set a breakpoint
@@ -60,14 +57,11 @@ void gob_trace(string path, map<gob::Address, gob::Symbol> symbols, function<voi
            struct user_regs_struct regs;
            ptrace(PTRACE_GETREGS, pid, NULL, &regs);
 
-           printf("stopped at 0x%llx\n", regs.rip);
-            
-            // bp has just been executed so 
-            regs.rip -= 1;
+           // bp has just been executed so 
+           regs.rip -= 1;
 
            auto sym = symbols.find(regs.rip);
            if (sym != symbols.end()) {
-                printf("replacing ins 0x%lx\n", bps[regs.rip]);
                 // replace the value
                 ptrace(PTRACE_POKETEXT, pid, regs.rip, bps[regs.rip]);
                 // move the ins pointer
@@ -76,8 +70,6 @@ void gob_trace(string path, map<gob::Address, gob::Symbol> symbols, function<voi
                 handler(sym->second);
            }
 
-           ptrace(PTRACE_GETREGS, pid, NULL, &regs);
-           printf("continuing at 0x%llx\n", regs.rip);
            // and then carry on with the run
            ptrace(PTRACE_CONT, pid, NULL, NULL);
         }
