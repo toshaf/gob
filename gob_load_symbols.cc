@@ -17,11 +17,12 @@ map<string, Symbol> load_symbols(string path) {
     bfd_init();
 
     bfd *abfd = bfd_openr(path.c_str(), NULL);
-    auto cleanup = [=](){bfd_close(abfd);};
-    defer<decltype(cleanup)> d(cleanup);
 
     if (!abfd)
         throw gob_exception("Couldn't load file");
+
+    auto cleanup = [=](){bfd_close(abfd);};
+    defer<decltype(cleanup)> d(cleanup);
 
     if(!bfd_check_format(abfd, bfd_object))
         throw gob_exception("Not a valid object file");
