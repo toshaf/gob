@@ -1,7 +1,8 @@
 BINARIES=\
     gob \
     gobc \
-    tester
+    tester \
+    bin/hi
 
 all: $(BINARIES)
 
@@ -31,6 +32,9 @@ gobc: $(GOBCFILES) $(GOBCHEADERS)
 
 tester: tester.c
 	gcc tester.c -o tester
+
+bin/hi: src/hi/main.go
+	./build-go.sh
 
 clean:
 	rm $(BINARIES)
