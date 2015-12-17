@@ -103,8 +103,13 @@ struct Load : public State {
             }
 
             if (input == "go") {
-                gob.run([](Symbol sym){
+                gob.run([&](Symbol sym){
                     cout << "BP @ " << sym.name << endl;
+                    auto info = gob.get_source_info(sym);
+                    cout << "File: " << info.filename << endl;
+                    cout << "Line: " << info.lineno << endl;
+                    cout << "Func: " << info.funcname << endl;
+                    cout << "8> ";
                     cin.ignore();
                 });
 

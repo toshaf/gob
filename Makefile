@@ -19,7 +19,7 @@ gob: $(GOBFILES) $(GOBHEADERS)
 	g++ $(GOBFILES) -std=c++11 -o gob -lbfd
 
 bin/tester: tester.c
-	gcc tester.c -o bin/tester
+	gcc tester.c -g -o bin/tester
 
 bin/hi: src/hi/main.go
 	./build-go.sh

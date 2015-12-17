@@ -32,6 +32,12 @@ private:
     std::string msg;
 };
 
+struct SourceInfo {
+    std::string funcname;
+    std::string filename;
+    unsigned int lineno;
+};
+
 struct Gob {
     Gob(std::string path);
     std::map<std::string, Symbol> get_symbols() const {
@@ -40,6 +46,7 @@ struct Gob {
     void set_breakpoint(std::string sym_name);
     void run(std::function<void(gob::Symbol)> handler);
     void dump_sections(std::ostream& out) const;
+    SourceInfo get_source_info(Symbol sym) const;
 private:
     std::string path;
     std::map<std::string, Symbol> symbols;
