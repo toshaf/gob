@@ -3,6 +3,7 @@
 #include <map>
 #include <string>
 #include <exception>
+#include <iostream>
 #include <functional>
 
 namespace gob {
@@ -38,6 +39,7 @@ struct Gob {
     };
     void set_breakpoint(std::string sym_name);
     void run(std::function<void(gob::Symbol)> handler);
+    void dump_sections(std::ostream& out) const;
 private:
     std::string path;
     std::map<std::string, Symbol> symbols;

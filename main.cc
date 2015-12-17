@@ -56,6 +56,7 @@ struct Load : public State {
     void help(std::ostream& out) {
         out << "File loaded: " << path << endl;
         out << "Options:" << endl;
+        out << "- sect:\n\tList all sections in the target" << endl;
         out << "- sym <prefix>:\n\tList symbols starting with prefix" << endl;
         out << "- br <sym>:\n\tSet breakpoint by name" << endl;
         out << "- go:\n\tRun the program" << endl;
@@ -67,6 +68,11 @@ struct Load : public State {
 
             if (input == "help") {
                 help(cout);
+                continue;
+            }
+
+            if (input == "sect") {
+                gob.dump_sections(cout);
                 continue;
             }
 
