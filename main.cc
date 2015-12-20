@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <memory>
+#include <fstream>
 
 #include "gob.hh"
 
@@ -104,12 +105,16 @@ struct Load : public State {
 
             if (input == "go") {
                 gob.run([&](Symbol sym){
-                    cout << "BP @ " << sym.name << endl;
+                        
                     auto info = gob.get_source_info(sym);
-                    cout << "File: " << info.filename << endl;
-                    cout << "Line: " << info.lineno << endl;
-                    cout << "Func: " << info.funcname << endl;
-                    cout << "8> ";
+                    std::ifstream file(info.filename);
+                    unsigned int counter = 0;
+                    for (std::string line; std::getline(file, line) && counter < info.lineno + 3; ++counter) {
+                        if (counter >= info.lineno - 1) {
+                            cout << line << endl;
+                        }
+                    }
+
                     cin.ignore();
                 });
 
