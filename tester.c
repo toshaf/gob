@@ -1,11 +1,19 @@
 #include <stdio.h>
+#include <string.h>
 
 void do_work() {
-    printf("working ...\n");
+    char msg[7];
+    //const char *smile = ":D";
+    
+    memcpy(msg, "Hiya", 4);
+    msg[4] = ' ';
+    memcpy(msg + 4, ":D", 2);
+
+    printf("%s\n", msg);
 }
 
 int main(int argc, char** argv) {
-    printf("Hiya :D\n");
+    printf("in main\n");
 
     do_work();
 
